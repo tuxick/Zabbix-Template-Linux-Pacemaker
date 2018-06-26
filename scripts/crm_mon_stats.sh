@@ -31,6 +31,7 @@ STATUS=$?
 p_import="import xml.etree.cElementTree as et,sys,io;tree=et.ElementTree();"
 p_tree="tree.parse(io.BytesIO(b'''$out'''));"
 
+
 if [ ${STATUS} -eq 0 ]
 then
     if [ "$item" == "last_update" ]; then
@@ -44,6 +45,8 @@ then
         p_item="obj=tree.getroot(); print ' '.join([f.get('online') for f in obj.findall('nodes/node')])"
     elif [ "$item" == "nodes_resources_running" ]; then
         p_item="obj=tree.getroot(); print ' '.join([f.get('resources_running') for f in obj.findall('nodes/node')])"
+    elif [ "$item" == "standby" ]; then
+        p_item="obj=tree.getroot(); print ' '.join([f.get('standby') for f in obj.findall(\"nodes//*[@name='`hostname`']\")])"
     else
         echo "UNKNOWN: wrong item: $item"
         exit ${STATE_UNKNOWN}
@@ -62,5 +65,6 @@ else
     echo "UNKNOWN: returncode ${STATUS}"
     exit ${STATE_UNKNOWN}
 fi
+
 
 
